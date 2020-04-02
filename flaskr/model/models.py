@@ -29,7 +29,7 @@ class Article(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(128))
     content = Column(Text)
-    created = Column(DateTime)
+    created = Column(DateTime, default=nowkor)
     user_id = Column(Integer, ForeignKey('users.id'))
 
     publisher = relationship('User', back_populates='articles')

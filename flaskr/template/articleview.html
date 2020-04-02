@@ -1,0 +1,41 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{# required: username, article, previtem, nextitem #}
+{% block title %}{{ article.title }}{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+    div.content {
+        border-style: inset;
+        white-space: pre;
+    }
+  </style>
+{% endblock %}
+
+{% block header %}
+  {{ macros.login_header(username) }}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <div class="created">Created: {{ article.created }}</div>
+  <div class="content">{{ article.content }}</div>
+  <div class="index">
+    {% if previtem %}
+{{ macros.goto("Previous", url_for('article.show', articleid=previtem.id)) }}
+    {% endif %}
+    {% if nextitem %}
+{{ macros.goto("Next", url_for('article.show', articleid=nextitem.id)) }}
+    {% endif %}
+  </div>
+  <div class="article_menu">
+    {{ macros.goto("Edit", url_for('article.edit', articleid=article.id)) }}
+    {{ macros.goto("Delete", url_for('article.delete', articleid=article.id)) }}
+  </div>
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("Go Home", url_for('index')) }}
+  {{ macros.goto("Memo List", url_for('article.show_all')) }}
+{% endblock %}

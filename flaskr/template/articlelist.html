@@ -1,0 +1,123 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{# required: username, articles, page, pages #}
+{% block title %}Memos{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+    div.article_title {
+        font-weight: bold;
+    }
+    div.article_content {
+        padding-left: 4px;
+        white-space: pre;
+        font-style: italic;
+    }
+    ul.articles {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+    li.article {
+        margin: 8px;
+        padding: 8px 12px;
+        border-left: 4px solid orange;
+    }
+    ul.pages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        border-collapse: collapse;
+    }
+    li.page {
+        padding: 4px;
+        border: 1px solid black;
+        background-color: white;
+        color: black;
+        float: left;
+    }
+    li.page a {
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    li.current {
+        padding: 4px;
+        border: 1px solid black;
+        background-color: black;
+        color: white;
+        float: left;
+    }
+    li.current a {
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    li.clear_pages {
+        clear: left;
+    }
+  </style>
+{% endblock %}
+
+{% block header %}
+  {{ macros.login_header(username) }}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <div class="tool">
+    {{ macros.goto('Write new one', url_for('article.new')) }}
+  </div>
+  <ul class="articles">
+    {% for article in articles %}
+      <li class="article">
+        <div class="article_title">
+          {{ article.title }}
+        </div>
+        <div class="article_created">
+          {{ article.created }}
+        </div>
+        <div class="article_content">{{ article.content[0:40] }}</div>
+        <div class="article_menu">
+{{ macros.goto("View", url_for('article.show', articleid=article.id)) }}
+{{ macros.goto("Delete", url_for('article.delete', articleid=article.id)) }}
+        </div>
+      </li>
+    {% else %}
+      <li>Nothing here! :(</li>
+    {% endfor %}
+  </ul>
+  <ul class="pages">
+    {% with %}
+      {% set s = ((page-1)//10)*10 + 1 %}
+      {% set e = (((page-1)//10)+1)*10 %}
+      {% if e > 10 %}
+        <li class="page">
+          {{ macros.goto('1', url_for('article.show_all', page=1)) }}
+        </li>
+        <li class="page">
+          {{ macros.goto('...', url_for('article.show_all', page=(s-1))) }}
+        </li>
+      {% endif %}
+      {% for p in range(s, ([e, pages]|min)+1) %}
+        <li class="{{ "current" if (p == page) else "page" }}">
+          {{ macros.goto(p|string, url_for('article.show_all', page=p)) }}
+        </li>
+      {% endfor %}
+      {% if e < ((pages-1)//10)*10 + 1 %}
+        <li class="page">
+          {{ macros.goto('...', url_for('article.show_all', page=(e+1))) }}
+        </li>
+        <li class="page">
+          {{ macros.goto(pages|string, url_for('article.show_all', page=pages)) }}
+        </li>
+      {% endif %}
+      <li class="clear_pages"></li>
+    {% endwith %}
+  </ul>
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("Go Home", url_for('index')) }}
+{% endblock %}

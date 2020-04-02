@@ -13,16 +13,25 @@
   <p>This is home.</p>
   <h2>Sitemap</h2>
   <ul>
-    <li>User
-      <ul>
-        {% if 'userid' not in session %}
+    {% if 'userid' not in session %}
+      <li>User
+        <ul>
           <li>{{ macros.goto("Register", url_for('user.new_form')) }}</li>
           <li>{{ macros.goto("Sign in", url_for('user.auth_form')) }}</li>
-        {% else %}
+        </ul>
+      </li>
+    {% else %}
+      <li>User
+        <ul>
           <li>{{ macros.goto("My information", url_for('user.show')) }}</li>
           <li>{{ macros.goto("Sign out", url_for('user.auth_destroy')) }}</li>
-        {% endif %}
-      </ul>
-    </li>
+        </ul>
+      </li>
+      <li>Services
+        <ul>
+          <li>{{ macros.goto("Memos", url_for('article.show_all')) }}</li>
+        </ul>
+      </li>
+    {% endif %}
   </ul>
 {% endblock %}

@@ -13,8 +13,8 @@
 {% endblock %}
 
 {% block footer %}
-  {{ macros.goto("My information", url_for('user.show')) }}
   {{ macros.goto("Go Home", url_for('index')) }}
+  {{ macros.goto("My information", url_for('user.show')) }}
 {% endblock %}
 
 {% block script %}

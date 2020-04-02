@@ -22,6 +22,8 @@ def create_app(config_filename):
     """ Blueprints """
     from flaskr.userbp import userbp
     app.register_blueprint(userbp, url_prefix='/user')
+    from flaskr.articlebp import articlebp
+    app.register_blueprint(articlebp, url_prefix='/article')
         
     @app.route('/')
     def index():
