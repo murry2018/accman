@@ -1,0 +1,20 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}We will miss you{% endblock %}
+
+{% block main %}
+  <h2>What will you get?</h2>
+  <ul>
+    <li>Your accounts will be permanently shut down.</li>
+    <li>Also, all your articles and sites will be removed.</li>
+  </ul>
+  <p>Do you really want these?</p>
+  <form action="{{ url_for('user.goodbye', really='no') }}">
+    <input type="submit" value="No. I'll Stay" />
+  </form>
+  
+  <form action="{{ url_for('user.goodbye', really='really') }}">
+    <input type="submit" value="Say me good bye" />
+  </form>
+{% endblock %}

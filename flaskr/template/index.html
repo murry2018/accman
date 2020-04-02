@@ -1,0 +1,28 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+{% block title %}HOME{% endblock %}
+
+{% block header %}
+  {% if 'userid' in session %}
+    {{ macros.login_header(session['username']) }}
+  {% endif %}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <p>This is home.</p>
+  <h2>Sitemap</h2>
+  <ul>
+    <li>User
+      <ul>
+        {% if 'userid' not in session %}
+          <li>{{ macros.goto("Register", url_for('user.new_form')) }}</li>
+          <li>{{ macros.goto("Sign in", url_for('user.auth_form')) }}</li>
+        {% else %}
+          <li>{{ macros.goto("My information", url_for('user.show')) }}</li>
+          <li>{{ macros.goto("Sign out", url_for('user.auth_destroy')) }}</li>
+        {% endif %}
+      </ul>
+    </li>
+  </ul>
+{% endblock %}

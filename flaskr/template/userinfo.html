@@ -1,0 +1,37 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}My Information{% endblock %}
+
+{% block header %}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <table>
+    <tr>
+      <td>Identifier</td>
+      <td>{{ session['identifier'] }}</td>
+      <td>{{ macros.goto("Change", url_for('user.modify_identifier')) }}</td>
+    </tr>
+    <tr>
+      <td>Full name</td>
+      <td colspan="2">{{ session['username'] }}</td>
+    </tr>
+    <tr>
+      <td>Last sign in</td>
+      <td colspan="2">{{ session['lastlogin'] }}</td>
+    </tr>
+    <tr>
+      <td>Password</td>
+      <td colspan="2">
+        {{ macros.goto("Change", url_for('user.modify_password')) }}
+      </td>
+    </tr>
+  </table>
+  <a href="{{url_for('user.shutdown')}}">Shutdown Account</a>
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("Go Home", url_for('index')) }}
+{% endblock %}

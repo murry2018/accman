@@ -1,0 +1,23 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block header %}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block title %}Change Your {% block item %}{% endblock %}{% endblock %}
+
+{% block main %}
+  {% block form %}
+  {% endblock %}
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("My information", url_for('user.show')) }}
+  {{ macros.goto("Go Home", url_for('index')) }}
+{% endblock %}
+
+{% block script %}
+  {% block validation %}
+  {% endblock %}
+{% endblock %}

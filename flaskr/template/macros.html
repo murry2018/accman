@@ -1,0 +1,21 @@
+{% macro login_header(username) -%}
+  <div class="welcome">
+    <strong>{{ username }}</strong>, welcome back.
+    <a href="{{ url_for('user.show') }}">My information</a>
+    <a href="{{ url_for('user.auth_destroy') }}">Sign out</a>
+  </div>
+{%- endmacro %}
+
+{% macro goto(name, link) -%}
+  <a href="{{ link }}">{{ name }}</a>
+{%- endmacro %}
+
+{% macro message_flashes(messages) -%}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{%- endmacro %}

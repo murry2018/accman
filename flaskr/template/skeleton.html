@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+      <title>{% block title %}{% endblock %} :: ACCMAN</title>
+      <meta charset="UTF-8" />
+      <link rel="stylesheet" type="text/css"
+            href="{{ url_for('static', filename='common.css') }}"
+            />
+    {% endblock %}
+  </head>
+  <body>
+    <div class="header">
+      {% block header %}
+      {% endblock %}
+    </div>
+    <div class="pagetitle">
+      {% block pagetitle %}
+        <h1>{{ self.title() }}</h1>
+      {% endblock %}
+    </div>
+    <div class="main">
+      {% block main %}
+      {% endblock %}
+    </div>
+    <div class="footer">
+      {% block footer %}
+      {% endblock %}
+    </div>
+    {% block script %}
+    {% endblock %}
+  </body>
+</html>

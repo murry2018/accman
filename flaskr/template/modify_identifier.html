@@ -1,0 +1,32 @@
+{% extends 'modify.html' %}
+
+{% block form %}
+  <form action="{{ url_for('user.modify_identifier') }}" method="POST"
+        id="mod_form" >
+    <table>
+      <tr>
+        <td>Current Identifier</td>
+        <td>{{ current }}</td>
+      </tr>
+      <tr>
+        <td>New Identifier</td>
+        <td><input type="text" name="identifier"
+                   id="userid" /></td>
+      </tr>
+    </table>
+    <input type="submit" />
+  </form>
+{% endblock %}
+
+{% block validation %}
+  <script>
+    var form = document.getElementById("mod_form");
+    var userid = document.getElementById("userid");
+    form.addEventListener("submit", function(event) {
+        if (userid.value == "") {
+            alert("Please complete form.");
+            event.preventDefault();
+        }
+    });
+  </script>
+{% endblock %}

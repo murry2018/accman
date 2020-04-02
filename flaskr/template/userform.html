@@ -1,0 +1,73 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Register as User{% endblock %}
+
+{% block header %}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <p>Already have your own account?
+    {{ macros.goto("Sign in!", url_for('user.auth_form')) }}
+  </p>
+  <form method="POST" action="{{ url_for('user.new_request') }}"
+        id="register_form" >
+    <table>
+      <tr>
+        <td>Identifier</td>
+        <td>
+          <input type="text" name="identifier"
+                 id="userid" />
+        </td>
+      </tr>
+      <tr>
+        <td>Full name</td>
+        <td>
+          <input type="text" name="username"
+                 id="username" />
+        </td>
+      </tr>
+      <tr>
+        <td>Password</td>
+        <td>
+          <input type="password" name="password"
+                 id="password" />
+        </td>
+      </tr>
+      <tr>
+        <td>Check Your Password</td>
+        <td>
+          <input type="password" id="checkword" />
+        </td>
+      </tr>
+    </table>
+    <input type="submit" id="submit" />
+  </form>
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("Go Home", url_for('index')) }}
+{% endblock %}
+
+{% block script %}
+  <script>
+    var form      = document.getElementById("register_form");
+    var submit    = document.getElementById("submit");
+    var userid    = document.getElementById("userid");
+    var username  = document.getElementById("username");
+    var password  = document.getElementById("password");
+    var checkword = document.getElementById("checkword");
+    form.addEventListener("submit", function(event) {
+    if (userid.value == "" ||
+        username.value == "" ||
+        password.value == "") {
+            alert("Please complete form");
+            event.preventDefault();
+        } else if (password.value != checkword.value) {
+            alert("Passwords are not consistent.");
+            event.preventDefault();
+        }
+    });
+  </script>
+{% endblock %}

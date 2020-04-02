@@ -1,0 +1,48 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Sign in{% endblock %}
+
+{% block header %}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <p>Is this your first time?
+    {{ macros.goto("Join us!", url_for('user.new_form')) }}
+  </p>
+  <form method="POST" action="{{ url_for('user.auth_request') }}"
+        id="sign_form" >
+    <table>
+      <tr>
+        <td>Identifier</td>
+        <td><input type="text" name="identifier"
+                   id="userid" /></td>
+      </tr>
+      <tr>
+        <td>Password</td>
+        <td><input type="password" name="password"
+                   id="password" /></td>
+      </tr>
+    </table>
+    <input type="submit" id="submit" />
+  </form>
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("Go Home", url_for('index')) }}
+{% endblock %}
+
+{% block script %}
+  <script>
+    var form     = document.getElementById("sign_form");
+    var userid   = document.getElementById("userid");
+    var password = document.getElementById("password");
+    form.addEventListener("submit", function(event) {
+        if (userid.value == "" || password.value == "") {
+            alert("Please complete form");
+            event.preventDefault();
+        }
+    });
+  </script>
+{% endblock %}
