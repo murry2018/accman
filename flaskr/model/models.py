@@ -19,6 +19,8 @@ class User(Base):
 
     articles = relationship('Article', back_populates='publisher',
                             cascade='delete')
+    accounts = relationship('Account', back_populates='owner',
+                            cascade='delete')
 
     def __repr__(self):
         return '#User<{}>'.format(self.identifier)
@@ -37,3 +39,20 @@ class Article(Base):
     def __repr__(self):
         return '#article<\'{}\'>'.format(self.title)
     
+class Account(Base):
+    __tablename__ = 'accounts'
+
+    id = Column(Integer, primary_key=True)
+    sitename = Column(String(60), nullable=False)
+    sitelink = Column(String)
+    userid   = Column(String)
+    email    = Column(String)
+    phone    = Column(String)
+    password = Column(String)
+    pass2nd  = Column(String)
+    description = Column(Text)
+
+    owner = relationship('User', back_populates='accounts')
+
+    def __repr__(self):
+        return '#account<{}@{}>'.format(self.userid, self.sitename)

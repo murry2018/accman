@@ -1,0 +1,126 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Keep Account Information{% endblock %}
+
+{% block header %}
+  {{ macros.login_header(username) }}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <p>[* : mandatory ]</p>
+  <p>[~ : required at least one among these field ]</p>
+  <form action="{{ url_for('account.new') }}" method="POST"
+        id="acc_form" >
+    <table>
+      <tr>
+        <td>Site Nickname*</td>
+        <td>
+          <input type="text" name="sitename" id="sitename" />
+        </td>
+      </tr>
+      <tr>
+        <td>Site URL</td>
+        <td>
+          <input type="text" name="sitelink" id="sitelink" />
+        </td>
+      </tr>
+      <tr>
+        <td>User ID~</td>
+        <td>
+          <input type="text" name="userid" id="userid" />
+        </td>
+      </tr>
+      <tr>
+        <td>Registered Email~</td>
+        <td>
+          <input type="text" name="email" id="email" />
+        </td>
+      </tr>
+      <tr>
+        <td>Registered Phone Number~</td>
+        <td>
+          <input type="text" name="phone" id="phone" />
+        </td>
+      </tr>
+      <tr>
+        <td>Password~</td>
+        <td>
+          <input type="password" name="password" id="password" />
+        </td>
+      </tr>
+      <tr>
+        <td>Check Your Password</td>
+        <td>
+          <input type="password" id="checkword" />
+        </td>
+      </tr>
+      <tr>
+        <td>2nd Password <input type="checkbox" id="exist2nd" /></td>
+        <td><input type="password" name="pass2nd" id="pass2nd" /></td>
+      </tr>
+      <tr>
+        <td>Check 2nd Password</td>
+        <td><input type="password" id="check2nd" /></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <textarea name="description"><textarea>
+        </td>
+      </tr>
+    </table>
+    <input type="submit" />
+  </form>
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("Go Home", url_for('index')) }}
+  {{ macros.goto("Account List", url_for('account.show_all')) }}
+{% endblock %}
+
+{% block script %}
+  <script>
+    var form = document.getElementById("acc_form");
+    var sitename = document.getElementById("sitename");
+    var userid = document.getElementById("userid");
+    var email = document.getElementById("email");
+    var phone = document.getElementById("phone");
+    var password = document.getElementById("password");
+    var checkword = document.getElementById("checkword");
+    var exist2nd = document.getElementById("exist2nd");
+    var pass2nd = document.getElementById("pass2nd");
+    var check2nd = document.getElementById("check2nd");
+    pass2nd.disabled = true;
+    check2nd.disabled = true;
+    exist2nd.addEventListener("change", function(event) {
+        if (event.target.checked) {
+            pass2nd.disabled = false;
+            check2nd.disabled = false;
+        } else {
+            pass2nd.disabled = true;
+            pass2nd.value = "";
+            check2nd.disabled = true;
+            check2nd.value = "";
+        }
+    });
+    form.addEventListener("submit", function(event) {
+        if (sitename.value == "") {
+            alert("Site Nickname field is mandatory.");
+            event.preventDefault();
+        } else if (userid.value == "" && password.value == "" &&
+                   email.value == "" && phone.value == "") {
+            alert("Complete User Id or Password field.");
+            event.preventDefault();
+        } else if (password.value != "" &&
+                   password.value != checkword.value) {
+            alert("Passwords are inconsistent.");
+            event.preventDefault();
+        } else if (exist2nd.checked &&
+                   pass2nd.value != check2nd.value) {
+            alert("Secondary passwords are inconsistent.");
+            event.preventDefault();
+        }
+    });
+  </script>
+{% endblock %}

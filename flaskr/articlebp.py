@@ -43,9 +43,14 @@ def show_all(page):
     ARTICLE_PER_PAGE = 5
     if 'userid' not in session:
         return redirect(url_for('index'))
+    if 'app' in request.args:
+        ARTICLE_PER_PAGE = int(request.args['app'])
     (s, e) = ((page-1)*ARTICLE_PER_PAGE, page*ARTICLE_PER_PAGE)
-    narticle = Article.query.join(Article.publisher).count()
-    articles = Article.query.join(Article.publisher).\
+    u = User.query.filter_by(id=session['userid']).first()
+    narticle = len(u.articles)
+    articles = db.session.query(Articles).\
+        select_from(join(User, Article, User.articles)).\
+        filter(User.id == u.id).\
         order_by(Article.id.desc())[s:e]
     pages = ceil(narticle/ARTICLE_PER_PAGE)
     return render_template('articlelist.html',
