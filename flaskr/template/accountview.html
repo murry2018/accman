@@ -1,0 +1,117 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{# required: username, account, previtem, nextitem, app #}
+{% block title %}{{ account.sitename }}{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+    div.content {
+        border-style: inset;
+        white-space: pre;
+    }
+  </style>
+{% endblock %}
+
+{% block header %}
+  {{ macros.login_header(username) }}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <p>{{ account.description }}</p>
+  <div class="account_menu">
+    {{ macros.goto("Edit(Account)", url_for('account.edit', id=account.id)) }}
+    {{ macros.goto("Edit(Password)", url_for('account.edit', id=account.id, what='pass')) }}
+    <a href="{{ url_for('account.delete', id=account.id) }}" id="delete">
+      Delete
+    </a>
+  </div>
+  <table>
+    <tr>
+      <td>Site Nickname</td>
+      <td>
+        {% if account.sitelink == '' %}
+          {{ account.sitename }}
+        {% else %}
+          <a href="{{ account.sitelink }}">
+            {{ account.sitename }}
+          </a>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>User ID</td>
+      <td>{{ '(None)' if account.userid == '' else account.userid }}</td>
+    </tr>
+    <tr>
+      <td>Registered Email</td>
+      <td>{{ '(None)' if account.email == '' else account.email }}</td>
+    </tr>
+    <tr>
+      <td>Registered Phone Number</td>
+      <td>{{ '(None)' if account.phone == '' else account.phone  }}</td>
+    </tr>
+  </table>
+  {% with %}
+    {% set existpass = (account.password != '') %}
+    {% set exist2nd  = (account.pass2nd  != '') %}
+    {% if existpass or exist2nd %}
+      {% if existpass %}
+        <form action="{{ url_for('account.checkpass', id=account.id, field=1) }}"
+              method="POST">
+          <table>
+            <tr>
+              <td colspan="2">Check Your Password</td>
+            </tr>
+            <tr>
+              <td><input type="password" name="password"></td>
+              <td style="border: none"><input type="submit" value="check"></td>
+            </tr>
+          </table>
+        </form>
+      {% endif %}
+      {% if exist2nd %}
+        <form action="{{ url_for('account.checkpass', id=account.id, field=2) }}"
+              method="POST">
+          <table>
+            <tr>
+              <td colspan="2">Check Your Second Password</td>
+            </tr>
+            <tr>
+              <td><input type="password" name="password"></td>
+              <td style="border: none"><input type="submit" value="check"></td>
+            </tr>
+          </table>
+        </form>
+      {% endif %}
+    {% endif %}
+  {% endwith %}
+  <div class="index">
+    {% if previtem %}
+      {{ macros.goto("Previous(" ~ previtem.sitename[0:10] ~ ")",
+                     url_for('account.show', id=previtem.id)) }}
+    {% endif %}
+    {% if nextitem %}
+      {{ macros.goto("Next(" ~ nextitem.sitename[0:10] ~ ")",
+                     url_for('account.show', id=nextitem.id)) }}
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("Go Home", url_for('index')) }}
+  {{ macros.goto("Account List", url_for('account.show_all',app=app)) }}
+{% endblock %}
+
+{% block script %}
+  <script>
+    var delete_button = document.getElementById("delete");
+    delete_button.addEventListener("click", function(event) {
+        var r = confirm("Do you really want to delete this account? This cannot be undone.");
+        if (r != true) {
+            event.preventDefault();
+        }
+    });
+  </script>
+{% endblock %}

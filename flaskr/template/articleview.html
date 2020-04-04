@@ -19,23 +19,25 @@
 {% endblock %}
 
 {% block main %}
+  <div class="article_menu">
+    {{ macros.goto("Edit", url_for('article.edit', articleid=article.id)) }}
+    {{ macros.goto("Delete", url_for('article.delete', articleid=article.id)) }}
+  </div>
   <div class="created">Created: {{ article.created }}</div>
   <div class="content">{{ article.content }}</div>
   <div class="index">
     {% if previtem %}
-{{ macros.goto("Previous", url_for('article.show', articleid=previtem.id)) }}
+    {{ macros.goto("Previous(" ~ previtem.title[0:10] ~ ")",
+                   url_for('article.show', articleid=previtem.id)) }}
     {% endif %}
     {% if nextitem %}
-{{ macros.goto("Next", url_for('article.show', articleid=nextitem.id)) }}
+    {{ macros.goto("Next(" ~ nextitem.title[0:10] ~ ")",
+                   url_for('article.show', articleid=nextitem.id)) }}
     {% endif %}
-  </div>
-  <div class="article_menu">
-    {{ macros.goto("Edit", url_for('article.edit', articleid=article.id)) }}
-    {{ macros.goto("Delete", url_for('article.delete', articleid=article.id)) }}
   </div>
 {% endblock %}
 
 {% block footer %}
   {{ macros.goto("Go Home", url_for('index')) }}
-  {{ macros.goto("Memo List", url_for('article.show_all')) }}
+  {{ macros.goto("Memo List", url_for('article.show_all', app=app)) }}
 {% endblock %}

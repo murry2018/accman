@@ -1,0 +1,90 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Edit Account Info{% endblock %}
+
+{% block header %}
+  {{ macros.login_header(username) }}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <p>[* : mandatory ]</p>
+  <p>[~ : required at least one among these field ]</p>
+  <form action="{{ url_for('account.edit', id=account.id) }}" method="POST"
+        id="acc_form" >
+    <table>
+      <tr>
+        <td>Site Nickname*</td>
+        <td>
+          <input type="text" name="sitename" id="sitename"
+                 value="{{ account.sitename }}"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Site URL</td>
+        <td>
+          <input type="text" name="sitelink" id="sitelink"
+                 value="{{ account.sitelink }}" />
+        </td>
+      </tr>
+      <tr>
+        <td>User ID~</td>
+        <td>
+          <input type="text" name="userid" id="userid"
+                 value="{{ account.userid }}" />
+        </td>
+      </tr>
+      <tr>
+        <td>Registered Email~</td>
+        <td>
+          <input type="text" name="email" id="email"
+                 value="{{ account.email }}"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Registered Phone Number~</td>
+        <td>
+          <input type="text" name="phone" id="phone"
+                 value="{{ account.phone }}" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">Description</td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <textarea name="description">{{ account.description }}</textarea>
+        </td>
+      </tr>
+    </table>
+    <input type="submit" />
+  </form>
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("Go Home", url_for('index')) }}
+  {{ macros.goto("Account List", url_for('account.show_all')) }}
+  {{ macros.goto("Back", url_for('account.show', id=account.id)) }}
+  {{ macros.goto("Edit Password", url_for('account.edit', id=account.id, what='pass')) }}
+{% endblock %}
+
+{% block script %}
+  <script>
+    var form = document.forms["acc_form"];
+    form.addEventListener("submit", function (event) {
+        if (form["sitename"].value == "") {
+            alert("Site Nickname field is mandatory.");
+            event.preventDefault();
+        }
+        {% if account.password == '' %}
+        else if (form["userid"].value == "" &&
+                 form["email"].value == "" &&
+                 form["phone"].value == "") {
+            alert("Please complete fields.");
+            event.preventDefault();
+        }
+        {% endif %}
+    });
+  </script>
+{% endblock %}

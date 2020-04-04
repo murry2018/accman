@@ -1,6 +1,7 @@
 {% macro login_header(username) -%}
   <div class="welcome">
     <strong>{{ username }}</strong>, welcome back.
+    <a href="{{ url_for('index') }}">Home</a>
     <a href="{{ url_for('user.show') }}">My information</a>
     <a href="{{ url_for('user.auth_destroy') }}">Sign out</a>
   </div>

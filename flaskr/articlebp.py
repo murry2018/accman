@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
 from math import ceil
-from flask import (Blueprint, current_app, request, flash,
+from flask import (Blueprint, make_response, request, flash,
                    url_for, redirect, render_template, session)
 import flaskr.model.db as db
 from flaskr.model.models import User, Article
 from werkzeug.security import (generate_password_hash,
                                check_password_hash)
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.sql.expression import join
 from markupsafe import escape
 
 articlebp = Blueprint('article', __name__,
@@ -35,7 +36,8 @@ def new():
     db.session.add(a)
     db.session.commit()
     flash('memo({}) saved.'.format(title),'good')
-    return redirect(url_for('article.show_all'))
+    return redirect(url_for('article.show_all',
+                            app=request.cookies.get('app', '5')))
 
 @articlebp.route('/', defaults={'page': 1})
 @articlebp.route('/<int:page>')
@@ -43,43 +45,55 @@ def show_all(page):
     ARTICLE_PER_PAGE = 5
     if 'userid' not in session:
         return redirect(url_for('index'))
+    if 'app' in request.cookies:
+        try: ARTICLE_PER_PAGE = int(request.cookies['app'])
+        except ValueError: pass
     if 'app' in request.args:
-        ARTICLE_PER_PAGE = int(request.args['app'])
+        try: ARTICLE_PER_PAGE = int(request.args['app'])
+        except ValueError: pass
     (s, e) = ((page-1)*ARTICLE_PER_PAGE, page*ARTICLE_PER_PAGE)
     u = User.query.filter_by(id=session['userid']).first()
     narticle = len(u.articles)
-    articles = db.session.query(Articles).\
-        select_from(join(User, Article, User.articles)).\
-        filter(User.id == u.id).\
+    articles = db.session.query(Article).\
+        filter_by(user_id=session['userid']).\
         order_by(Article.id.desc())[s:e]
     pages = ceil(narticle/ARTICLE_PER_PAGE)
-    return render_template('articlelist.html',
-                           username=session['username'],
-                           articles=articles,
-                           page=page, pages=pages)
+    resp = make_response(
+        render_template('articlelist.html',
+                        username=session['username'],
+                        articles=articles,
+                        page=page, pages=pages,
+                        app=str(ARTICLE_PER_PAGE)))
+    resp.set_cookie('app', str(ARTICLE_PER_PAGE))
+    return resp
 
-@articlebp.route('/view/<int:articleid>')
+@articlebp.route('/<int:articleid>/view')
 def show(articleid):
     if 'userid' not in session:
         return redirect(url_for('index'))
-    nextitem = Article.query.filter(Article.id < articleid).\
+    articles = db.session.query(Article).\
+        filter_by(user_id=session['userid'])
+    nextitem = articles.filter(Article.id < articleid).\
         order_by(Article.id.desc()).first()
-    article = Article.query.filter_by(id=articleid).first()
-    previtem = Article.query.filter(Article.id > articleid).\
+    article = articles.filter_by(id=articleid).first()
+    previtem = articles.filter(Article.id > articleid).\
         order_by(Article.id).first()
     if article == None:
         flash('Article does not exist.', 'error')
-        return redirect(url_for('article.show_all'))
+        return redirect(url_for('article.show_all',
+                                app=request.cookies.get('app', '5')))
     if article.publisher.id != session['userid']:
         flash('You don\'t have permission.', 'error')
-        return redirect(url_for('article.show_all'))
+        return redirect(url_for('article.show_all',
+                                app=request.cookies.get('app', '5')))
     return render_template('articleview.html',
                            username=session['username'],
                            article=article,
                            previtem=previtem,
-                           nextitem=nextitem)
+                           nextitem=nextitem,
+                           app=request.cookies.get('app', '5'))
 
-@articlebp.route('/delete/<int:articleid>')
+@articlebp.route('/<int:articleid>/delete')
 def delete(articleid):
     if 'userid' not in session:
         return redirect(url_for('index'))
@@ -95,7 +109,7 @@ def delete(articleid):
     flash('Deleted successfully.', 'good')
     return redirect(url_for('article.show_all'))
 
-@articlebp.route('/edit/<int:articleid>', methods=['GET', 'POST'])
+@articlebp.route('/<int:articleid>/edit', methods=['GET', 'POST'])
 def edit(articleid):
     if 'userid' not in session:
         return redirect(url_for('index'))
@@ -105,7 +119,7 @@ def edit(articleid):
         return redirect(url_for('article.show_all'))
     if article.publisher.id != session['userid']:
         flash('You don\'t have permission.', 'error')
-        return redirect(url_for('article.show_all'))
+        return redirect(url_for('article.show_all',))
     if request.method == 'GET':
         return render_template('articleedit.html',
                                username=session['username'],

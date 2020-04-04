@@ -1,5 +1,7 @@
 {% extends 'modify.html' %}
 
+{% block item %}ID{% endblock %}
+
 {% block form %}
   <form action="{{ url_for('user.modify_identifier') }}" method="POST"
         id="mod_form" >

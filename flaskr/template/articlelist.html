@@ -94,23 +94,23 @@
       {% set e = (((page-1)//10)+1)*10 %}
       {% if e > 10 %}
         <li class="page">
-          {{ macros.goto('1', url_for('article.show_all', page=1)) }}
+          {{ macros.goto('1', url_for('article.show_all', page=1, app=app)) }}
         </li>
         <li class="page">
-          {{ macros.goto('...', url_for('article.show_all', page=(s-1))) }}
+          {{ macros.goto('...', url_for('article.show_all', page=(s-1), app=app)) }}
         </li>
       {% endif %}
       {% for p in range(s, ([e, pages]|min)+1) %}
         <li class="{{ "current" if (p == page) else "page" }}">
-          {{ macros.goto(p|string, url_for('article.show_all', page=p)) }}
+          {{ macros.goto(p|string, url_for('article.show_all', page=p, app=app)) }}
         </li>
       {% endfor %}
       {% if e < ((pages-1)//10)*10 + 1 %}
         <li class="page">
-          {{ macros.goto('...', url_for('article.show_all', page=(e+1))) }}
+          {{ macros.goto('...', url_for('article.show_all', page=(e+1), app=app)) }}
         </li>
         <li class="page">
-          {{ macros.goto(pages|string, url_for('article.show_all', page=pages)) }}
+          {{ macros.goto(pages|string, url_for('article.show_all', page=pages, app=app)) }}
         </li>
       {% endif %}
       <li class="clear_pages"></li>

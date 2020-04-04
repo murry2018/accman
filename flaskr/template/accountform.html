@@ -65,8 +65,11 @@
         <td><input type="password" id="check2nd" /></td>
       </tr>
       <tr>
+        <td colspan="2">Description</td>
+      </tr>
+      <tr>
         <td colspan="2">
-          <textarea name="description"><textarea>
+          <textarea name="description"></textarea>
         </td>
       </tr>
     </table>
@@ -110,7 +113,7 @@
             event.preventDefault();
         } else if (userid.value == "" && password.value == "" &&
                    email.value == "" && phone.value == "") {
-            alert("Complete User Id or Password field.");
+            alert("Please complete fields.");
             event.preventDefault();
         } else if (password.value != "" &&
                    password.value != checkword.value) {

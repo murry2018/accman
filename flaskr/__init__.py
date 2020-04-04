@@ -4,11 +4,10 @@ def create_app(config_filename):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE_URL='sqlite:///C:\\work\\accman\\db.db',
         ADMIN_IDENTIFIER='admin'
     )
 
-    app.config.from_pyfile('config.cfg', silent=True)
+    app.config.from_envvar('FLASK_SETTINGS', silent=True)
     
     """ database config """
     import flaskr.model.db as db
@@ -24,6 +23,8 @@ def create_app(config_filename):
     app.register_blueprint(userbp, url_prefix='/user')
     from flaskr.articlebp import articlebp
     app.register_blueprint(articlebp, url_prefix='/article')
+    from flaskr.accountbp import accountbp
+    app.register_blueprint(accountbp, url_prefix='/account')
         
     @app.route('/')
     def index():

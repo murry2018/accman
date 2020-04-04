@@ -1,8 +1,8 @@
 {% extends 'skeleton.html' %}
 {% import 'macros.html' as macros %}
 
-{# required: username, accounts, page, pages #}
-{% block title %}Memos{% endblock %}
+{# required: username, accounts, page, pages, app #}
+{% block title %}Account Manager{% endblock %}
 {% block head %}
   {{ super() }}
   <style>
@@ -85,10 +85,13 @@
             <p>(Unnamed user)</p>
           {% endif %}
         </div>
+        <div class="account_description">
+          {{ account.description[0:16] }}
+        </div>
         <div class="account_menu">
           {{ macros.goto("Detail", url_for('account.show', id=account.id)) }}
           <a href="{{ url_for('account.delete', id=account.id) }}"
-             onclick="delete_confirm(this);">
+             onclick="delete_confirm(event);">
             Delete
           </a>
         </div>
@@ -103,23 +106,23 @@
       {% set e = (((page-1)//10)+1)*10 %}
       {% if e > 10 %}
         <li class="page">
-          {{ macros.goto('1', url_for('account.show_all', page=1)) }}
+          {{ macros.goto('1', url_for('account.show_all', page=1, app=app)) }}
         </li>
         <li class="page">
-          {{ macros.goto('...', url_for('account.show_all', page=(s-1))) }}
+          {{ macros.goto('...', url_for('account.show_all', page=(s-1), app=app)) }}
         </li>
       {% endif %}
       {% for p in range(s, ([e, pages]|min)+1) %}
         <li class="{{ "current" if (p == page) else "page" }}">
-          {{ macros.goto(p|string, url_for('account.show_all', page=p)) }}
+          {{ macros.goto(p|string, url_for('account.show_all', page=p, app=app)) }}
         </li>
       {% endfor %}
       {% if e < ((pages-1)//10)*10 + 1 %}
         <li class="page">
-          {{ macros.goto('...', url_for('account.show_all', page=(e+1))) }}
+          {{ macros.goto('...', url_for('account.show_all', page=(e+1), app=app)) }}
         </li>
         <li class="page">
-          {{ macros.goto(pages|string, url_for('account.show_all', page=pages)) }}
+          {{ macros.goto(pages|string, url_for('account.show_all', page=pages, app=app)) }}
         </li>
       {% endif %}
       <li class="clear_pages"></li>
@@ -129,4 +132,15 @@
 
 {% block footer %}
   {{ macros.goto("Go Home", url_for('index')) }}
+{% endblock %}
+
+{% block script %}
+  <script>
+    var delete_confirm = function delete_confirm(event) {
+        var r = confirm("Do you really want to delete this account?");
+        if (r != true) {
+            event.preventDefault();
+        }               
+    }
+  </script>
 {% endblock %}

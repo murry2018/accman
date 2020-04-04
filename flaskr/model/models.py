@@ -51,6 +51,7 @@ class Account(Base):
     password = Column(String)
     pass2nd  = Column(String)
     description = Column(Text)
+    user_id = Column(Integer, ForeignKey('users.id'))
 
     owner = relationship('User', back_populates='accounts')
 

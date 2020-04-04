@@ -1,0 +1,87 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Edit Account Password{% endblock %}
+
+{% block header %}
+  {{ macros.login_header(username) }}
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <p>[~ : required at least one among these field ]</p>
+  <form action="{{ url_for('account.edit', id=account.id, what='pass') }}" method="POST"
+        id="acc_form" >
+    <table>
+      <tr>
+        <td>Password~</td>
+        <td>
+          <input type="password" name="password" id="password" />
+        </td>
+      </tr>
+      <tr>
+        <td>Check Your Password</td>
+        <td>
+          <input type="password" name="checkword" id="checkword" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Secondary Password
+          <input type="checkbox" id="exist2nd"
+                 {{ 'checked' if account.pass2nd != '' else '' }}/>
+        </td>
+        <td>
+          <input type="password" name="pass2nd" id="pass2nd" />
+        </td>
+      </tr>
+      <tr>
+        <td>Check Your Secondary Password</td>
+        <td><input type="password" name="check2nd" id="check2nd" />
+      </tr>
+    </table>
+    <input type="submit" />
+  </form>
+{% endblock %}
+
+{% block footer %}
+  {{ macros.goto("Go Home", url_for('index')) }}
+  {{ macros.goto("Account List", url_for('account.show_all')) }}
+  {{ macros.goto("Back", url_for('account.show', id=account.id)) }}
+  {{ macros.goto("Edit Information", url_for('account.edit', id=account.id, what='info')) }}
+{% endblock %}
+
+{% block script %}
+  <script>
+    var form = document.forms["acc_form"];
+    var exist2nd = document.getElementById("exist2nd");
+    if (exist2nd.checked) {
+        form["pass2nd"].disabled = false;
+        form["check2nd"].disabled = false;
+    } else {
+        form["pass2nd"].value = "";
+        form["pass2nd"].disabled = true;
+        form["check2nd"].value = "";
+        form["check2nd"].disabled = true;
+    }
+    exist2nd.addEventListener("change", function(event) {
+        if (exist2nd.checked) {
+            form["pass2nd"].disabled = false;
+            form["check2nd"].disabled = false;
+        } else {
+            form["pass2nd"].value = "";
+            form["pass2nd"].disabled = true;
+            form["check2nd"].value = "";
+            form["check2nd"].disabled = true;
+        }
+    });
+    {% if account.userid == '' and account.email == '' and account.phone == '' %}
+    form.addEventListener("submit", function (event) {
+        if (form["password"] == '') {
+            alert("Please complete fields.");
+            event.preventDefault();
+        }
+    });
+  {% endif %}
+  </script>
+{% endblock %}
