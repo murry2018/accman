@@ -1,0 +1,41 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Change Password for {{ identifier }}{% endblock %}
+
+{% block header %}
+  <div class="welcome">
+    <strong>Administrator</strong>, welcome back.
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('admin.index') }}">Admin Page</a>
+  </div>
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+
+{% block main %}
+  <form action="{{ url_for('admin.chpass', id=id)}}" method="POST" id="pass_form">
+    <table>
+      <tr>
+        <td>{{ identifier }}&#39;s Password</td>
+        <td><input type="password" name="password" id="password"></td>
+      </tr>
+      <tr>
+        <td>Check {{ identifier }}&#39;s Password</td>
+        <td><input type="password" name="checkword" id="checkword"></td>
+      </tr>
+    </table>
+    <input type="submit" />
+  </form>
+{% endblock %}
+
+{% block script %}
+  <script>
+    var form = document.forms["pass_form"];
+    form.addEventListener("submit", function(event) {
+        if (form["password"].value != form["checkword"].value) {
+            event.preventDefault();
+        }
+    });
+  </script>
+{% endblock %}

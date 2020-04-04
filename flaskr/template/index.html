@@ -34,5 +34,10 @@
         </ul>
       </li>
     {% endif %}
+    {% if isadmin %}
+      <li>
+        {{ macros.goto("Administration", url_for('admin.index')) }}
+      </li>
+    {% endif %}
   </ul>
 {% endblock %}

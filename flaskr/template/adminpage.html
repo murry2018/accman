@@ -1,0 +1,65 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}You Are Administrator{% endblock %}
+
+{% block header %}
+  <div class="welcome">
+    <strong>Administrator</strong>, welcome back.
+    <a href="{{ url_for('index') }}">Home</a>
+  </div>
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <table>
+    <tr>
+      <th>row_id</th>
+      <th>identifier</th>
+      <th>username</th>
+      <th>currlogin</th>
+      <th>details</th>
+      <th>*DELETE*</th>
+    </tr>
+    {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.identifier }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.currlogin }}</td>
+        <td>
+          <a href="{{ url_for('admin.getuser', id=user.id) }}">
+             GET[{{ user.identifier[0:10] }}]
+          </a>
+        </td>
+        <td>
+          <a href="{{ url_for('admin.rmuser', id=user.id) }}"
+             onclick="confirm_deletion(event);">
+             DEL[{{ user.identifier[0:10] }}]
+          </a>
+        </td>
+      </tr>
+    {% else %}
+      <tr>
+        <td colspan="5">
+          Nothing Here! :(
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
+
+{% block footer %}
+  <a href="{{ url_for('index') }}">Home</a>
+{% endblock %}
+  
+{% block script %}
+  <script>
+    var confirm_deletion = function confirm_deletion(event) {
+        var r = confirm("Really delete this user?");
+        if (r != true) {
+            event.preventDefault();
+        }
+    };
+  </script>
+{% endblock %}

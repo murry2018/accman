@@ -1,0 +1,56 @@
+{% extends 'skeleton.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}#User&lt;{{ user.id }}&gt; Information{% endblock %}
+
+{% block header %}
+  <div class="welcome">
+    <strong>Administrator</strong>, welcome back.
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('admin.index') }}">Admin Page</a>
+  </div>
+  {{ macros.message_flashes(get_flashed_messages(with_categories=true)) }}
+{% endblock %}
+
+{% block main %}
+  <div class="admin_menu">
+    <a href="{{ url_for('admin.chpass', id=user.id) }}">
+      Change password
+    </a>
+  </div>
+  <table>
+    <tr>
+      <td>row_id</td>
+      <td>{{ user.id }}</td>
+    </tr>
+    <tr>
+      <td>identifier</td>
+      <td>{{ user.identifier }}</td>
+    </tr>
+    <tr>
+      <td>hashed password</td>
+      <td>{{ user.password }}</td>
+    </tr>
+    <tr>
+      <td>lastlogin</td>
+      <td>{{ user.lastlogin }}</td>
+    </tr>
+    <tr>
+      <td>currlogin</td>
+      <td>{{ user.currlogin }}</td>
+    </tr>
+    <tr>
+      <td>#(articles)</td>
+      <td>{{ narticle }}</td>
+    </tr>
+    <tr>
+      <td>#(accounts)</td>
+      <td>{{ naccount }}</td>
+    </tr>
+  </table>
+{% endblock %}
+
+{% block footer %}
+  <a href="{{ url_for('index') }}">Home</a>
+  <a href="{{ url_for('admin.index') }}">User List</a>
+{% endblock %}
