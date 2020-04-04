@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from sqlalchemy.orm import relationship
-from sqlalchemy import (Column, ForeignKey,
+from sqlalchemy import (Column, Sequence, ForeignKey,
                         Integer, String, DateTime, Text)
 from .db import Base
 
@@ -10,7 +10,7 @@ def nowkor():
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, Sequence('seq_users_id'), primary_key=True)
     identifier = Column(String, unique=True)
     username   = Column(String)
     password   = Column(String)
@@ -28,7 +28,7 @@ class User(Base):
 class Article(Base):
     __tablename__ = 'articles'
     
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, Sequence('seq_articles_id'), primary_key=True)
     title = Column(String(128))
     content = Column(Text)
     created = Column(DateTime, default=nowkor)
@@ -42,7 +42,7 @@ class Article(Base):
 class Account(Base):
     __tablename__ = 'accounts'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, Sequence('seq_accounts_id'), primary_key=True)
     sitename = Column(String(60), nullable=False)
     sitelink = Column(String)
     userid   = Column(String)
