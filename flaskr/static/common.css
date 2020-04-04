@@ -1,0 +1,38 @@
+a:link {
+    color: #cc6600;
+}
+a:visited {
+    color: gray;
+}
+a:hover {
+    color: black;
+}
+td {
+    border: 1px solid black;
+    padding: 3px;
+}
+ul.flashes {
+    list-style-type: none;
+    padding: 0;
+}
+ul.flashes > li.error {
+    background-color: #ff8586;
+    border-left: #ff0000 solid 5px;
+    padding: 3px;
+    padding-left: 5px;
+    margin: 5px;
+}
+ul.flashes > li.warning {
+    background-color: #ffe680;
+    border-left: #cc6600 solid 5px;
+    padding: 3px;
+    padding-left: 5px;
+    margin: 5px;
+}
+ul.flashes > li.good {
+    background-color: #85e085;
+    border-left: #008000 solid 5px;
+    padding: 3px;
+    padding-left: 5px;
+    margin: 5px;
+}
