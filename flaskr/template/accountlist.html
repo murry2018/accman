@@ -85,9 +85,6 @@
             <p>(Unnamed user)</p>
           {% endif %}
         </div>
-        <div class="account_description">
-          {{ account.description[0:16] }}
-        </div>
         <div class="account_menu">
           {{ macros.goto("Detail", url_for('account.show', id=account.id)) }}
           <a href="{{ url_for('account.delete', id=account.id) }}"

@@ -7,7 +7,7 @@
   {{ super() }}
   <style>
     div.content {
-        border-style: inset;
+        border-style: none;
         white-space: pre;
     }
   </style>
@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block main %}
-  <p>{{ account.description }}</p>
+  <div class="content">{{ account.description }}</div>
   <div class="account_menu">
     {{ macros.goto("Edit(Account)", url_for('account.edit', id=account.id)) }}
     {{ macros.goto("Edit(Password)", url_for('account.edit', id=account.id, what='pass')) }}
