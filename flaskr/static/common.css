@@ -1,3 +1,11 @@
+div {
+    overflow: auto;
+}
+textarea.autoexpand {
+    min-height: 5em;
+    max-height: 50vh;
+    width: 300px;
+}
 a:link {
     color: #cc6600;
 }
