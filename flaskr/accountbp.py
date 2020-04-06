@@ -59,7 +59,7 @@ def new():
                             app=request.cookies.get('app', '10')))
 
 @accountbp.route('/', defaults={'page': 1})
-@accountbp.route('/<page>')
+@accountbp.route('/<int:page>')
 def show_all(page):
     ACCOUNT_PER_PAGE = 10
     if 'userid' not in session:
